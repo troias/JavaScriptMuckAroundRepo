@@ -1,7 +1,5 @@
 "use strict";
 const arry = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-const morphedArr = arry.at(-1);
-console.log("morphedArr", morphedArr);
 const initialState = {
     arry: [1, 2, 3, 4, 5, 6, 7, 8, 9],
     morphedArr: [],
@@ -21,8 +19,9 @@ const btn = document.getElementById("show");
 if (!btn) {
     throw new Error("Button not found");
 }
+const answer = document.getElementById("answer");
 btn.addEventListener("click", () => {
-    const morphedArr = arry.at(-1);
+    const morphedArr = arry[arry.length - 1]; // Access the last element using array indexing
     console.log("morphedArr", morphedArr);
     const action = {
         type: "MORPH_ARRAY",
@@ -30,21 +29,9 @@ btn.addEventListener("click", () => {
     };
     const newState = reducer(initialState, action);
     console.log("newState", newState);
+    if (!answer) {
+        throw new Error("Answer not found");
+    }
+    answer.innerHTML = JSON.stringify(newState) || "No result";
 });
-const answer = document.getElementById("result");
-console.log("answer", answer);
-if (!answer) {
-    throw new Error("Answer not found");
-}
-answer.innerHTML = "Answer";
-const empty = document.getElementById("empty");
-if (!empty) {
-    throw new Error("Empty not found");
-}
-empty.innerHTML = "empty";
-// Set Button Text
-const btnText = document.getElementById("btnText");
-if (!btnText) {
-    throw new Error("btnText not found");
-}
-btnText.innerHTML = "Show Result";
+// Path: javascript/arrayMethods/src/index.ts

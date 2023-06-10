@@ -1,72 +1,74 @@
-const arry = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+// app.js
 
-const morphedArr = arry.at(-1);
-
-console.log("morphedArr", morphedArr);
-
-const initialState = {
-  arry: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-  morphedArr: [],
-};
-
-interface Action {
-  type: string;
-  payload: any;
-}
-
-const reducer = (state = initialState, action: Action) => {
-  switch (action.type) {
-    case "MORPH_ARRAY":
-      return {
-        ...state,
-        morphedArr: action.payload,
-      };
-    default:
-      return state;
-  }
-};
-
-const btn = document.getElementById("show");
-
-if (!btn) {
-  throw new Error("Button not found");
-}
-
-btn.addEventListener("click", () => {
-  const morphedArr = arry.at(-1);
-  console.log("morphedArr", morphedArr);
-  const action: Action = {
-    type: "MORPH_ARRAY",
-    payload: morphedArr,
+(function () {
+  const state = {
+    arry: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    morphedArr: [],
+    isMorphed: false,
   };
-  const newState = reducer(initialState, action);
-  console.log("newState", newState);
-});
 
-const answer = document.getElementById("result");
+  function reducer(state, action) {
+    switch (action.type) {
+      case "MORPH_ARRAY":
+        return {
+          ...state,
+          morphedArr: action.payload,
+        };
 
-console.log("answer", answer);
+      case "RESET_ARRAY":
+        return {
+          ...state,
+          morphedArr: [],
+        };
 
-if (!answer) {
-  throw new Error("Answer not found");
-}
+      default:
+        return state;
+    }
+  }
 
-answer.innerHTML = "Answer";
+  function handleButtonClick() {
+    if (!state.isMorphed) {
+      const morphedArr = state.arry[state.arry.length - 1];
+      const action = {
+        type: "MORPH_ARRAY",
+        payload: morphedArr,
+      };
 
-const empty = document.getElementById("empty");
+      state = reducer(state, action);
 
-if (!empty) {
-  throw new Error("Empty not found");
-}
+      answer.innerHTML = state.morphedArr.toString();
+      btn.innerHTML = "Reset";
 
-empty.innerHTML = "empty";
+      state.isMorphed = true;
+    } else {
+      const action = {
+        type: "RESET_ARRAY",
+        payload: [],
+      };
 
-// Set Button Text
+      state = reducer(state, action);
 
-const btnText = document.getElementById("btnText");
+      answer.innerHTML = state.morphedArr.toString();
 
-if (!btnText) {
-  throw new Error("btnText not found");
-}
+      state.isMorphed = false;
+    }
+  }
 
-btnText.innerHTML = "Show Result";
+  function initialize() {
+    const btn = document.getElementById("show");
+    const answer = document.getElementById("result");
+    const originalArray = document.getElementById("originalArray");
+    const newArray = document.getElementById("newArray");
+
+    if (!btn || !answer || !originalArray || !newArray) {
+      throw new Error("Element not found");
+    }
+    btn.innerHTML = "Show";
+
+    btn.addEventListener("click", handleButtonClick);
+    originalArray.innerHTML = state.arry.toString();
+    newArray.innerHTML = state.morphedArr.toString();
+  }
+
+  initialize();
+})();
